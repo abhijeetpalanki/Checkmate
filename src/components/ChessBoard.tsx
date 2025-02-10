@@ -1,5 +1,37 @@
+import Tile from "./Tile";
+
 const verticalAxis = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const horizontalAxis = ["a", "b", "c", "d", "e", "f", "g", "h"];
+
+interface Piece {
+  image: string;
+  x: number;
+  y: number;
+}
+
+const pieces: Piece[] = [];
+
+for (let i = 0; i < 8; i++) {
+  pieces.push({ image: "assets/pawn_b.png", x: i, y: 1 });
+}
+
+for (let i = 0; i < 8; i++) {
+  pieces.push({ image: "assets/pawn_w.png", x: i, y: 6 });
+}
+
+for (let p = 0; p < 2; p++) {
+  const type = p === 0 ? "b" : "w";
+  const y = p === 0 ? 0 : 7;
+
+  pieces.push({ image: `assets/rook_${type}.png`, x: 0, y });
+  pieces.push({ image: `assets/rook_${type}.png`, x: 7, y });
+  pieces.push({ image: `assets/knight_${type}.png`, x: 1, y });
+  pieces.push({ image: `assets/knight_${type}.png`, x: 6, y });
+  pieces.push({ image: `assets/bishop_${type}.png`, x: 2, y });
+  pieces.push({ image: `assets/bishop_${type}.png`, x: 5, y });
+  pieces.push({ image: `assets/queen_${type}.png`, x: 3, y });
+  pieces.push({ image: `assets/king_${type}.png`, x: 4, y });
+}
 
 const ChessBoard = () => {
   return (
@@ -8,14 +40,13 @@ const ChessBoard = () => {
         {Array.from({ length: horizontalAxis.length }).map((_, row) => (
           <div key={row}>
             {Array.from({ length: verticalAxis.length }).map((_, col) => {
-              const isDark = (row + col) % 2 !== 0;
-              const squareColor = isDark ? "bg-[#779556]" : "bg-[#ebecd0]";
-              return (
-                <div
-                  key={col}
-                  className={`w-[100px] h-[100px] ${squareColor}`}
-                ></div>
-              );
+              let image;
+              pieces.forEach((p: Piece) => {
+                if (p.x === row && p.y === col) {
+                  image = p.image;
+                }
+              });
+              return <Tile key={col} image={image} squareNumber={row + col} />;
             })}
           </div>
         ))}
